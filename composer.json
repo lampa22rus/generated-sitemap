@@ -1,0 +1,21 @@
+{
+  "name": "lampa22rus/generated-sitemap",
+  "type": "library",
+  "description": "Класс для генерации сайтмапа.",
+  "homepage": "https://github.com/lampa22rus/generated-sitemap",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrey Grischenko",
+      "email": "11857@bk.ru"
+    }
+  ],
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lampa\\": "src/"
+    }
+  }
+}
