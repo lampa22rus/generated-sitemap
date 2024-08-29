@@ -2,6 +2,8 @@
 
 namespace Lampa\Entity;
 
+use Exception;
+use Lampa\Exceptions\FailedToCreateDirectoryException;
 use Lampa\Exceptions\InvalidInitialUrlValueException;
 use Lampa\Exceptions\InsufficientPermissionsWriteException;
 use Lampa\Url;
@@ -97,22 +99,34 @@ abstract class AbstractSitemap
     }
 
     /**
-     * Sets the path for the sitemap file.
-     *
-     * @param string $path The path where the sitemap file will be saved.
-     * @return self Returns the current instance for method chaining.
-     * @throws InsufficientPermissionsWriteException If the provided path is not writable.
-     */
-    public function setPath(string $path): self
-    {
-        if (!file_exists($path) && !touch($path) && !is_writable($path)) {
-            throw new InsufficientPermissionsWriteException();
-        }
-
-        $this->path = $path;
-
-        return $this;
+ * Sets the path for the sitemap file.
+ *
+ * This method checks if the directory of the given path exists. If not, it attempts to create the directory.
+ * It also verifies if the file exists and if it is writable. If not, it throws an appropriate exception.
+ *
+ * @param string $path The path where the sitemap file will be saved.
+ * @return self Returns the current instance for method chaining.
+ * @throws FailedToCreateDirectoryException If the directory of the given path cannot be created.
+ * @throws InsufficientPermissionsWriteException If the file at the given path is not writable.
+ */
+public function setPath(string $path): self
+{
+    if (!is_dir(pathinfo($path)['dirname']) &&
+        !mkdir(pathinfo($path)['dirname'], 0777, true)
+    ) {
+            throw new FailedToCreateDirectoryException($path);
     }
+
+    if (!file_exists($path) &&
+        !touch($path) &&
+        !is_writable($path)
+    ) {
+        throw new InsufficientPermissionsWriteException();
+    }
+    $this->path = $path;
+
+    return $this;
+}
 
     /**
      * Retrieves the path for the sitemap file.

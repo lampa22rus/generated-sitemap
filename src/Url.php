@@ -5,7 +5,7 @@ namespace Lampa;
 use DateTime;
 use http\Exception\InvalidArgumentException;
 use Lampa\Enums\ValidFrequenciesEnum;
-use Lampa\Exceptions\InvalidInitialArgument;
+use Lampa\Exceptions\InvalidInitialArgumentException;
 
 class Url
 {
@@ -24,7 +24,7 @@ class Url
      * @param string|DateTime $lastMod The last modification date of the page. Can be a string in a recognized format or a DateTime object.
      * @param float $priority The priority of the page for search engines. Must be a float between 0.0 and 1.0. Default is 1.0.
      * @param string|ValidFrequenciesEnum $frequency The change frequency of the page for search engines. Must be a string from the ValidFrequenciesEnum or a corresponding enum value. Default is ValidFrequenciesEnum::WEEKLY.
-     * @throws InvalidInitialArgument
+     * @throws InvalidInitialArgumentException
      */
     public function __construct(
         string $url,
@@ -49,7 +49,7 @@ class Url
      * @param float $priority The priority of the page for search engines. Must be a float between 0.0 and 1.0. Default is 1.0.
      * @param string|ValidFrequenciesEnum $frequency The change frequency of the page for search engines. Must be a string from the ValidFrequenciesEnum or a corresponding enum value. Default is ValidFrequenciesEnum::WEEKLY.
      * @return self A new instance of the Url class.
-     * @throws InvalidInitialArgument If any of the provided parameters are invalid.
+     * @throws InvalidInitialArgumentException If any of the provided parameters are invalid.
      */
     public static function make(
         string $url,
@@ -68,12 +68,12 @@ class Url
      *
      * @param string $url The URL of the page. Must be a valid URL.
      * @return self The current instance of the Url class.
-     * @throws InvalidInitialArgument If the provided URL is not valid.
+     * @throws InvalidInitialArgumentException If the provided URL is not valid.
      */
     public function setUrl(string $url): self
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new InvalidInitialArgument("url");
+            throw new InvalidInitialArgumentException("url");
         }
         $this->url = $url;
 
@@ -89,12 +89,12 @@ class Url
      * @param string|DateTime $lastMod The last modification date of the page. Can be a string in a recognized format or a DateTime object.
      * @param string $format The format in which the last modification date should be stored. Default is 'c' (ISO 8601).
      * @return self The current instance of the Url class.
-     * @throws InvalidInitialArgument If the provided last modification date is not valid.
+     * @throws InvalidInitialArgumentException If the provided last modification date is not valid.
      */
     public function setLastMod(string|DateTime $lastMod, string $format = 'c'): self
     {
         if (!$this->checkDateTime($lastMod)) {
-            throw new InvalidInitialArgument("lastMod");
+            throw new InvalidInitialArgumentException("lastMod");
         }
         $this->lastMod = (new DateTime($lastMod))->format($format);
 
@@ -109,12 +109,12 @@ class Url
      *
      * @param float $priority The priority of the page for search engines. Must be a float between 0.0 and 1.0.
      * @return self The current instance of the Url class.
-     * @throws InvalidInitialArgument If the provided priority is not within the valid range.
+     * @throws InvalidInitialArgumentException If the provided priority is not within the valid range.
      */
     public function setPriority(float $priority): self
     {
         if ($priority < 0 || $priority > 1) {
-            throw new InvalidInitialArgument("priority, (0.0 - 1.0)");
+            throw new InvalidInitialArgumentException("priority, (0.0 - 1.0)");
         }
 
         $this->priority = $priority;
@@ -130,7 +130,7 @@ class Url
      * @param string|ValidFrequenciesEnum $frequencies The change frequency of the page for search engines.
      *     Must be a string from the ValidFrequenciesEnum or a corresponding enum value.
      * @return self The current instance of the Url class.
-     * @throws InvalidInitialArgument If the provided change frequency is not valid.
+     * @throws InvalidInitialArgumentException If the provided change frequency is not valid.
      */
     public function setFrequency(string|ValidFrequenciesEnum $frequencies): self
     {
@@ -139,7 +139,7 @@ class Url
         }
 
         if (is_string($frequencies) && empty(ValidFrequenciesEnum::tryFrom($frequencies))) {
-            throw new InvalidInitialArgument(
+            throw new InvalidInitialArgumentException(
                 "frequency (daily, weekly, monthly, yearly, never)"
             );
         }

@@ -6,7 +6,7 @@ use Exception;
 use Lampa\Entity\AbstractSitemap;
 use Throwable;
 
-class InvalidInitialArgument extends Exception
+class InvalidInitialArgumentException extends Exception
 {
     /**
      * @param $message

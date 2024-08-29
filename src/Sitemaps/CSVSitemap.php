@@ -9,8 +9,8 @@ class CSVSitemap extends AbstractSitemap
     private array $columns = [
         'loc',
         'lastmod',
+        'priority',
         'changefreq',
-        'priority'
     ];
 
     /**
